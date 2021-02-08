@@ -8,6 +8,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.javaex.dao.UserDao;
 import com.javaex.service.UserService;
@@ -117,6 +119,24 @@ public class UserController {
 		authUser.setName(userVo.getName());
 
 		return "redirect:/";
+	}
+	
+	//회원가입 - 아이디 체크
+	@ResponseBody
+	@RequestMapping(value = "/idcheck", method = { RequestMethod.GET, RequestMethod.POST })
+	public String idcheck(@RequestParam("id") String id, @RequestParam("password") String password) { //@ModelAttribute
+		//패스워드는 테스트용 코드 추가한것임
+		
+		System.out.println("/user/idcheck");
+		System.out.println("chekid = " + id);
+		System.out.println("password = " + password);  
+		
+		String result = userService.idcheck(id);
+		
+		System.out.println(result);
+		
+		return result;   //@RespnoseBody --> response 의 body 영역에 data만 보낸다 (retrun 값)
+		
 	}
 	
 
