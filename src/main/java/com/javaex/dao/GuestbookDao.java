@@ -33,13 +33,12 @@ public class GuestbookDao {
 	}
 	
 	/* 글 저장(selectkey) */
-	public int insertSelectKey(GuestbookVo guestbookVo) {
+	public void insertSelectKey(GuestbookVo guestbookVo) {
 		System.out.println("[guestbookDao] insertSelectKey()");
 		
-		System.out.println("xml실행전-->" + guestbookVo);
+		System.out.println("dao:xml실행전-->" + guestbookVo);
 		sqlSession.insert("guestbook.insertSelectKey", guestbookVo);
-		System.out.println("xml실행후-->" + guestbookVo);
-		return guestbookVo.getNo();
+		System.out.println("dao:xml실행후-->" + guestbookVo);
 	}
 	
 	/* 글 1개 가져오기 */

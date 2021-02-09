@@ -77,47 +77,18 @@
 				<input type="hidden" name="action" value="add">
 
 				<!-- </form> -->
+				
+				
+				
+				
+				
+				<div id="guestbookListArea">
+					<!-- 방명록 글 리스트...출력영역 -->
+				</div>
 
 
-
-
-				<table class="guestRead">
-					<colgroup>
-						<col style="width: 10%;">
-						<col style="width: 40%;">
-						<col style="width: 40%;">
-						<col style="width: 10%;">
-					</colgroup>
-					<tr>
-						<td>1234555</td>
-						<td>이정재</td>
-						<td>2020-03-03 12:12:12</td>
-						<td><a href="">[삭제]</a></td>
-					</tr>
-					<tr>
-						<td colspan=4 class="text-left">방명록 글입니다. 방명록 글입니다.</td>
-					</tr>
-				</table>
-				<!-- //guestRead -->
-
-				<table class="guestRead">
-					<colgroup>
-						<col style="width: 10%;">
-						<col style="width: 40%;">
-						<col style="width: 40%;">
-						<col style="width: 10%;">
-					</colgroup>
-					<tr>
-						<td>1234555</td>
-						<td>이정재</td>
-						<td>2020-03-03 12:12:12</td>
-						<td><a href="">[삭제]</a></td>
-					</tr>
-					<tr>
-						<td colspan=4 class="text-left">방명록 글입니다. 방명록 글입니다.</td>
-					</tr>
-				</table>
-				<!-- //guestRead -->
+				
+				
 
 
 			</div>
@@ -136,6 +107,44 @@
 
 <script type="text/javascript">
 
+//DOM이 생성되면 
+$("document").ready(function(){
+	console.log("ready");
+	
+	$.ajax({
+		
+		url : "${pageContext.request.contextPath }/api/guestbook/list",		
+		type : "post",
+		//contentType : "application/json",
+		//data : {name: "홍길동"},
+
+		dataType : "json",
+		success : function(guestbookList){
+			/*성공시 처리해야될 코드 작성*/
+			console.log(guestbookList);
+			
+			for(var i=0; i<guestbookList.length; i++){
+				render(guestbookList[i]);	
+			}
+			
+		},
+		error : function(XHR, status, error) {
+			console.error(status + " : " + error);
+		}
+	});
+
+
+	
+	
+	
+});
+
+
+
+
+
+
+
 //방명록 등록버튼 클릭할때
 $("#btnSubmit").on("click", function(){
 	console.log("방명록 등록 버튼 클릭");
@@ -147,7 +156,6 @@ $("#btnSubmit").on("click", function(){
 	console.log(password);
 	console.log(content);
 	
-		
 	//ajax방식으로 요청(저장)
 	$.ajax({
 		
@@ -157,8 +165,12 @@ $("#btnSubmit").on("click", function(){
 		data : {name: name, password: password, content: content},
 
 		dataType : "json",
-		success : function(result){
+		success : function(guestbookVo){
 			/*성공시 처리해야될 코드 작성*/
+			console.log(guestbookVo);
+			//{no: 22, name: "강호동", password: null, content: "123", regDate: "2021-02-09 16:09:23.0"}
+			render(guestbookVo); //게스트북 정보 출력
+			
 		},
 		error : function(XHR, status, error) {
 			console.error(status + " : " + error);
@@ -166,6 +178,35 @@ $("#btnSubmit").on("click", function(){
 	});
 
 });
+
+
+//방명록 글 정보 + html 조합하여 화면에 출력
+function render(guestbookVo ){
+	//{no: 22, name: "강호동", password: null, content: "123", regDate: "2021-02-09 16:09:23.0"}
+	var str= "";
+	str += '<table class="guestRead">';
+	str += '	<colgroup>';
+	str += '		<col style="width: 10%;">';
+	str += '		<col style="width: 40%;">';
+	str += '		<col style="width: 40%;">';
+	str += '		<col style="width: 10%;">';
+	str += '	</colgroup>';
+	str += '	<tr>';
+	str += '		<td>'+ guestbookVo.no +'</td>';
+	str += '		<td>'+ guestbookVo.name +'</td>';
+	str += '		<td>'+ guestbookVo.regDate +'</td>';
+	str += '		<td><a href="">[삭제]</a></td>';
+	str += '	</tr>';
+	str += '	<tr>';
+	str += '		<td colspan=4 class="text-left">'+ guestbookVo.content +'</td>';
+	str += '	</tr>';
+	str += '</table>';
+	
+	$("#guestbookListArea").prepend(str);
+	
+}
+
+
 
 
 

@@ -36,18 +36,20 @@ public class GuestbookService {
 	}
 	
 	/* ajax 글저장-->저장된 글 리턴 */
-	public void writeResultVo(GuestbookVo guestbookVo) {
+	public GuestbookVo writeResultVo(GuestbookVo guestbookVo) {
+
 		//글저장-->번호
 		
 		//int no = guestbookDao.insertSelectKey(guestbookVo);
+		System.out.println("service: dao.insertSelectKey()실행전-->" + guestbookVo);
 		
 		guestbookDao.insertSelectKey(guestbookVo);
+		
+		System.out.println("service: dao.insertSelectKey()실행후-->" + guestbookVo);
 		int no =guestbookVo.getNo(); 
 		
 		//글 1개 가져오기 
-		GuestbookVo vo = guestbookDao.selectOne(no);
-		System.out.println(vo);
-		
+		return guestbookDao.selectOne(no);
 	}
 	
 	
