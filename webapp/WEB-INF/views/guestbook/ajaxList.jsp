@@ -150,14 +150,45 @@
 	$("#modalBtnDel").on("click", function(){
 		console.log("모달창 삭제 버튼 클릭");
 		
-		//모달창 비밀번호, no 수집
-		var password = $("#modalPassword").val();
 		var no = $("#modalNo").val();
 		
-		console.log(password);
-		console.log(no);
+		//모달창 비밀번호, no 수집
+		var guestbooVo = {
+			password: $("#modalPassword").val(),
+			no: $("#modalNo").val()
+		};
 		
+		console.log(guestbooVo);
 		
+		$.ajax({
+			
+			url : "${pageContext.request.contextPath }/api/guestbook/remove",		
+			type : "post",
+			//contentType : "application/json",
+			data : guestbooVo,
+
+			dataType : "json",
+			success : function(count){
+				/*성공시 처리해야될 코드 작성*/
+				console.log(count);
+				
+				if(count == 1){
+					$("#delModal").modal("hide");  //모달창닫기
+					
+					//no 테이블(글) 화면에서 안보이도록 처리 
+					$("#t-"+ no).remove();
+					
+				}else{
+					//모달창 닫기
+					alert("비밀번호가 틀렸습니다.");
+					$("#modalPassword").val("");
+				}
+				
+			},
+			error : function(XHR, status, error) {
+				console.error(status + " : " + error);
+			}
+		});
 		
 	});
 	
@@ -166,6 +197,10 @@
 	$("#guestbookListArea").on("click", "a", function() {
 		event.preventDefault();
 		console.log("모달 창 호출");
+		
+		//비밀번호 필드 초기화
+		$("#modalPassword").val("");
+		
 		
 		var no = $(this).data("no");
 		$("#modalNo").val(no);
@@ -178,25 +213,28 @@
 	$("#btnSubmit").on("click", function() {
 		console.log("방명록 등록 버튼 클릭");
 		//방명록 데이터 수집
-		var name = $("[name='name']").val();
-		var password = $("[name='pass']").val();
-		var content = $("[name='content']").val();
-		console.log(name);
-		console.log(password);
-		console.log(content);
-
+		
+		var guestbookVo = {
+			name: $("[name='name']").val(),
+			password: $("[name='pass']").val(),
+			content: $("[name='content']").val()
+		};
+		
+		console.log(guestbookVo);
+		
 		//ajax방식으로 요청(저장)
 		$.ajax({
 
-			url : "${pageContext.request.contextPath}/api/guestbook/write",
+			url : "${pageContext.request.contextPath}/api/guestbook/write2",
 			type : "post",
+			
 			//contentType : "application/json",
-			data : {
-				name : name,
-				password : password,
-				content : content
-			},
-
+			//data : guestbookVo,
+			
+			contentType : "application/json",
+			data : JSON.stringify(guestbookVo),
+			
+			
 			dataType : "json",
 			success : function(guestbookVo) {
 				/*성공시 처리해야될 코드 작성*/
@@ -220,7 +258,7 @@
 	function render(guestbookVo, updown) {
 		//{no: 22, name: "강호동", password: null, content: "123", regDate: "2021-02-09 16:09:23.0"}
 		var str = "";
-		str += '<table class="guestRead">';
+		str += '<table id="t-'+ guestbookVo.no +'" class="guestRead">';
 		str += '	<colgroup>';
 		str += '		<col style="width: 10%;">';
 		str += '		<col style="width: 40%;">';
