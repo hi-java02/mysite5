@@ -39,7 +39,13 @@ public class ApiGuestbookController {
 		return guestbookService.writeResultVo(guestbookVo);
 	}
 	
-	
+	//글삭제(ajax)
+	@RequestMapping(value = "/remove")
+	public String remove() {
+		System.out.println("[ApiGuestbookController] /write");
+		
+		return "";
+	}
 	
 	
 }
