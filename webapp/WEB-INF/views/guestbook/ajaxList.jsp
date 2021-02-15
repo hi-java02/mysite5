@@ -201,6 +201,8 @@
 		//비밀번호 필드 초기화
 		$("#modalPassword").val("");
 		
+		console.log($(this));
+		console.log($(this).data("no"));
 		
 		var no = $(this).data("no");
 		$("#modalNo").val(no);
